@@ -4,7 +4,7 @@ import logging
 import logging.config
 import yaml
 
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_debugtoolbar import DebugToolbarExtension
 from dynaconf import FlaskDynaconf
 
@@ -13,6 +13,14 @@ from pathlib import Path
 
 def create_app():
     app = Flask(__name__)
+
+    @app.route("/favicon.ico")
+    def favicon():
+        return send_from_directory(
+            os.path.join(app.root_path, "static"),
+            "favicon.ico",
+            mimetype="image/vnd.microsoft.icon",
+        )
 
     with app.app_context():
         os.environ["ROOT_PATH_FOR_DYNACONF"] = app.root_path
