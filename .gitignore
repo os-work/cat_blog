@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+# Visual studio 
+*.pyproj
+*.pyproj.user
+
 # Distribution / packaging
 .Python
 build/
