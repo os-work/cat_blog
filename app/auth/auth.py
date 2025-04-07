@@ -32,3 +32,5 @@ def login():
         return redirect(next_url)
 
     return render_template("login.html", form=form)
+
+    form = RegisterNewUserForm
