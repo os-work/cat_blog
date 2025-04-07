@@ -19,6 +19,7 @@ login_manager.login_view = "auth_bp.login"
 Flask_bcrypt = Bcrypt()
 db = SQLAlchemy()
 
+
 def create_app():
     app = Flask(__name__)
 
@@ -56,13 +57,18 @@ def create_app():
         # Register Flask blueprints
         from . import intro
         from . import auth
+
         app.register_blueprint(intro.intro_bp)
         app.register_blueprint(auth.auth_bp)
 
         # Create the database tables if they don't exist
         db.create_all()
 
+        # Inject navigation items into the context
+        app.context_processor(navigation_items)
+
         return app
+
 
 # Configure logging for the application
 def _configure_logging(app, dynaconf):
@@ -92,3 +98,23 @@ def _configure_logging(app, dynaconf):
 
     # Log the current logging level
     logging.getLogger(__name__).info(f"Logging configured. Level: {env_logging_level}")
+
+# Navigation items for the application
+def navigation_items():
+    return {
+        "nav_items": [
+            {"name": "Home", "link": "intro_bp.home", "icon": "bi-house"},
+            {"name": "About", "link": "intro_bp.about", "icon": "bi-info-square"},
+            {"name": "Login", "link": "auth_bp.login", "icon": "bi bi-door-open"},
+            {
+                "name": "Logout",
+                "link": "auth_bp.logout",
+                "icon": "bi bi-door-closed-fill",
+            },
+            {
+                "name": "Registration",
+                "link": "auth_bp.register_new_user",
+                "icon": "bi bi-person-plus",
+            },
+        ],
+    }

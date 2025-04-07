@@ -1,0 +1,66 @@
+{# 
+    This macro outputs any form errors and should be placed under a form control in the html
+#}
+{% macro validation_errors(errors) %}
+    {% if errors %}
+        {% for error in errors %}
+            <div class="text-danger small">{{ error }}</div>
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+
+
+{#
+    This macro builds the nav items for the application navbar
+#}
+{% macro build_nav_item() %}
+  {% for nav_item in nav_items %}
+
+       {% set link = nav_item["link"] %}
+
+       {# skip authentication related nav items #}
+       {% set skip_item = 
+           (link == "auth_bp.register_new_user" and current_user.is_authenticated) or
+           (link == "auth_bp.login" and current_user.is_authenticated) or
+           (link == "auth_bp.logout" and not current_user.is_authenticated) 
+       %}
+       {% if not skip_item %}
+           {% set is_active = request.endpoint == link %}
+           <a class="nav-link ml-2{% if is_active %} active{% endif %}" 
+           {% if is_active %}aria-current="page"{% endif %} href="{{ url_for(link) }}">
+               {% if "icon" in nav_item %}
+                   <i class="bi {{ nav_item['icon'] }}"></i>
+               {% endif %}
+               {{ nav_item["name"] }}
+           </a>
+       {% endif %}
+   {% endfor %}
+{% endmacro %}
+
+{# 
+    Handle the flash messages as bootstrap toasts
+#}
+{% macro flask_flash_messages() %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div aria-live="polite" aria-atomic="true" class="position-relative">
+                <div class="toast-container position-absolute top-0 end-0 p-3" style="z-index: 2000; opacity: 1;">
+                    {% for category, message in messages %}
+                        {% set category = "white" if category == "message" else category %}
+                        {% set text_color = "text-dark" if category in ["warning", "info", "light", "white"] else "text-white" %}
+                        <div class="toast bg-{{ category }}" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="toast-header bg-{{ category }} {{ text_color }}">
+                                {% set toast_title = category if category in ["success", "danger", "warning", "info"] else "message" %}
+                                <strong class="me-auto">Clog: {{ toast_title.title() }}</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                            <div class="toast-body {{ text_color }}">
+                                {{ message }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    {% endwith %}
+{% endmacro %}

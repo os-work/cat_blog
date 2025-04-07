@@ -4,18 +4,18 @@
     <div class="card bg-warning mb-3 font-weight-bold"
          style="margin-top: 10px;">
         <div class="card-body">
-            Current time: {{ data["now"] }}
+            Current time: {{ now }}
         </div>
     </div>
     <p>
-        Page visits: {{ data["page_visit"].counts() }}
+        Page visits: {{ page_visit.counts() }}
     </p>
     <div class="card" style="width: 18rem;">
         <div class="card-header">
             List of available banner colors
         </div>
         <ul class="list-group list-group-flush">
-            {% for banner_color in data["banner_colors"] %}
+            {% for banner_color in banner_colors %}
             <li class="list-group-item">
                 {{ banner_color }}
             </li>
@@ -33,7 +33,7 @@
 {% block scripts %}
 {{ super() }}
 <script>
- const banner_colors = {{ data["banner_colors"] | tojson | safe }};
+ const banner_colors = {{ banner_colors | tojson | safe }};
 </script>
 <script src="{{ url_for('.static', filename='js/index.js') }}"></script>
 {% endblock %}

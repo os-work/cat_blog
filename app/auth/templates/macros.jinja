@@ -1,7 +1,0 @@
-{% macro validation_errors(errors) %}
-	{% if errors %}
-		{% for error in errors %}
-			<div class="text-danger small">{{error}}</div>
-		{% endfor %}
-	{% endif %}
-{% endmacro %}
