@@ -11,6 +11,7 @@ from dynaconf import FlaskDynaconf
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
+from flask_migrate import Migrate
 from pathlib import Path
 
 
@@ -18,6 +19,7 @@ login_manager = LoginManager()
 login_manager.login_view = "auth_bp.login"
 Flask_bcrypt = Bcrypt()
 db = SQLAlchemy()
+migrate = Migrate()
 
 
 def create_app():
@@ -35,7 +37,7 @@ def create_app():
         os.environ["ROOT_PATH_FOR_DYNACONF"] = app.root_path
 
         # Initialize Dynaconf explicitly
-        dynaconf = FlaskDynaconf(app, settings_files=["secrets.toml"])
+        dynaconf = FlaskDynaconf(app, settings_files=["settings.toml", "secrets.toml"])
 
         # Ensure SECRET_KEY is loaded properly
         if "SECRET_KEY" not in app.config or not app.config["SECRET_KEY"]:
@@ -50,6 +52,8 @@ def create_app():
         Flask_bcrypt.init_app(app)
         # Initialize SQLAlchemy
         db.init_app(app)
+        # Initialize Flask-Migrate
+        migrate.init_app(app, db)
 
         # Initialize DebugToolbarExtension
         toolbar = DebugToolbarExtension(app)
