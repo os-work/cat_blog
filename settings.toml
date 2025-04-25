@@ -5,6 +5,7 @@ extensions = ["flask_debugtoolbar:DebugToolbarExtension"]
 debug_tb_enabled = true
 debug_tb_intercept_redirects = false
 confirmation_link_timeout = 12   # in hours
+password_reset_timeout = 1   # in hours
 logging_level = "DEBUG"
 
 [production]

@@ -68,6 +68,15 @@ def create_app():
         # Create the database tables if they don't exist
         db.create_all()
 
+        # initialize the role table
+        from .models import Role
+        Role.initialize_role_table()
+
+        # inject the role permissions class into all template contexts
+        @app.context_processor
+        def inject_permissions():
+            return dict(Permissions=Role.Permissions)
+
         # Inject navigation items into the context
         app.context_processor(navigation_items)
 
@@ -109,7 +118,6 @@ def navigation_items():
         "nav_items": [
             {"name": "Home", "link": "intro_bp.home", "icon": "bi-house"},
             {"name": "About", "link": "intro_bp.about", "icon": "bi-info-square"},
-            {"name": "Login", "link": "auth_bp.login", "icon": "bi bi-door-open"},
             {
                 "name": "Logout",
                 "link": "auth_bp.logout",
@@ -118,6 +126,10 @@ def navigation_items():
             {
                 "name": "Registration",
                 "link": "auth_bp.register_new_user",
+                "icon": "bi bi-person-plus",
+            },{
+                "name": "Reset password",
+                "link": "auth_bp.request_reset_password",
                 "icon": "bi bi-person-plus",
             },
         ],

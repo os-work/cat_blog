@@ -51,6 +51,9 @@
                 <div class="navbar-nav mr-auto">
                     {{ macros.build_nav_item() }}
                 </div>
+                <div class="navbar-nav">
+                    {{ macros.build_login_logout_items(current_user) }}
+                </div>
             </div>
         </nav>
         {# insert the flask flash handler #} {{ macros.flask_flash_messages() }}
